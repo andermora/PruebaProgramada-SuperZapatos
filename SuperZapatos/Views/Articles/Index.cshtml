@@ -1,0 +1,77 @@
+﻿@using System.Web.Configuration
+@using SuperZapatos.Models
+
+@model IEnumerable<SuperZapatos.Models.Article>
+@{
+    ViewBag.Title = "Articles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Articles</h2>
+
+<p>
+    @Html.ActionLink("New Article", "New", "Articles", null, new { @class = "btn btn-primary" })
+</p>
+
+<table id="articles" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document)
+            .ready(function () {
+                var table = $("#articles").DataTable({
+                    // AJAX Source
+                    ajax: {
+                        url: "/api/articles",
+                        dataSrc: ""
+                    },
+                    // COLUMN DATA
+                    columns: [
+                        {   // Col 1: Store Name
+                            data: "Name",
+                            render: function (data, type, article) {
+                                return "<a href='/articles/edit/" + article.Id + "'>" + article.Name + "</a>";
+                            }
+                        },
+                        {   // Col 2: Description
+                            data: "Description"
+                        },
+                        {   // Col 3: Delete
+                            data: "Id",
+                            render: function (data) {
+                                return "<button class='btn-link js-delete' data-article-id=" + data + ">Delete</button>";
+                            }
+                        }
+                    ]
+                });
+
+                $("#articles")
+                    .on("click", ".js-delete",
+                        function () {
+                            var button = $(this);
+                            bootbox.confirm("Are you sure you want to delete this article?",
+                                function (result) {
+                                    if (result) {
+                                        $.ajax({
+                                            url: "/api/articles/" + button.attr("data-article-id"),
+                                            method: "DELETE",
+                                            success: function () {
+                                                table.row(button.parents("tr")).remove().draw();
+                                            }
+                                        });
+                                    }
+
+                                });
+                        });
+        });
+    </script>
+}

@@ -1,0 +1,77 @@
+﻿@using System.Web.Configuration
+@using SuperZapatos.Models
+
+@model IEnumerable<SuperZapatos.Models.Store>
+@{
+    ViewBag.Title = "Stores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Stores</h2>
+
+<p>
+    @Html.ActionLink("New Store", "New", "Stores", null, new { @class = "btn btn-primary" })
+</p>
+
+<table id="stores" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Store</th>
+        <th>Address</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document)
+            .ready(function () {
+                var table = $("#stores").DataTable({
+                    // AJAX Source
+                    ajax: {
+                        url: "/api/stores",
+                        dataSrc: ""
+                    },
+                    // COLUMN DATA
+                    columns: [
+                        {   // Col 1: Store Name
+                            data: "Name",
+                            render: function (data, type, store) {
+                                return "<a href='/stores/edit/" + store.Id + "'>" + store.Name + "</a>";
+                            }
+                        },
+                        {   // Col 2: Address
+                            data: "Address"
+                        },
+                        {   // Col 3: Delete
+                            data: "Id", 
+                            render: function (data) {
+                                return "<button class='btn-link js-delete' data-store-id=" + data + ">Delete</button>";
+                            }
+                        }
+                    ]
+                });
+
+                $("#stores")
+                    .on("click", ".js-delete",
+                        function () {
+                            var button = $(this);
+                            bootbox.confirm("Are you sure you want to delete this customer?",
+                                function (result) {
+                                    if (result) {
+                                        $.ajax({
+                                            url: "/api/stores/" + button.attr("data-store-id"),
+                                            method: "DELETE",
+                                            success: function () {
+                                                table.row(button.parents("tr")).remove().draw();
+                                            }
+                                        });
+                                    }
+
+                                });
+                        });
+        });
+    </script>    
+}

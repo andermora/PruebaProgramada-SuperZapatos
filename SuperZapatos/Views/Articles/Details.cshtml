@@ -1,0 +1,13 @@
+﻿@model SuperZapatos.Models.Article
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>@Model.Name</h2>
+
+<ul>
+    <li><b>Description:</b> @Model.Description</li>
+    <li><b>Price:</b> @Model.Price</li>
+    <li><b>Total in Shelf:</b> @Model.TotalInShelf</li>
+    <li><b>Total in Shelf:</b> @Model.TotalInVault</li>
+</ul>

@@ -1,0 +1,49 @@
+﻿@model  SuperZapatos.ViewModels.ArticleFormViewModel
+
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Article</h2>
+
+@using (Html.BeginForm("Save", "Articles"))
+{
+    @Html.ValidationSummary()
+    <div class="form-group">
+        @Html.LabelFor(m => m.Article.Name, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.Article.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Article.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Article.Description, new { @class = "control-label" })
+        @Html.TextAreaFor(m => m.Article.Description, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Article.Price, new { @class = "control-label" })
+        @Html.TextAreaFor(m => m.Article.Price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Article.Price)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Article.TotalInShelf, new { @class = "control-label" })
+        @Html.TextAreaFor(m => m.Article.TotalInShelf, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Article.TotalInVault, new { @class = "control-label" })
+        @Html.TextAreaFor(m => m.Article.TotalInVault, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Article.StoreId, new { @class = "control-label" })
+        @Html.DropDownListFor(m => m.Article.StoreId, new SelectList(Model.Stores,"Id", "Name"), "Select Store", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Article.StoreId)
+    </div>
+    @Html.HiddenFor(m => m.Article.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
